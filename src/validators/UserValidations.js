@@ -28,16 +28,6 @@ export const resetPasswordSchema = Joi.object({
   newPassword: Joi.string().min(6).required(),
 });
 
-export const idParamSchema = Joi.object({
-  id: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)          
-    .required()
-    .messages({
-      "string.pattern.base": "Invalid ID format. Must be a MongoDB ObjectId",
-      "any.required": "ID is required",
-    }),
-});
-
 
 export const findEmailQuerySchema = Joi.object({
   email: Joi.string().email().required().messages({

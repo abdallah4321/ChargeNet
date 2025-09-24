@@ -10,13 +10,13 @@ import {
 import { checkRole, protect } from '../middleware/auth.js';
 import {
   validateBody,
+    idParamSchema,
   validateParam,
   validateQuery,
 } from '../middleware/validateMiddleware.js';
 import {
   createStationSchema,
   geoSearchQuerySchema,
-  idParamSchema,
   updateStationSchema,
 } from '../validators/StationsValidations.js';
 
@@ -32,11 +32,11 @@ router.post(
 );
 router.get(
   '/:id',
-  checkRole(['driver', 'owner', 'superadmin']),
+  checkRole(['Driver', 'owner', 'superadmin']),
   validateParam(idParamSchema),
   StationById
 );
-router.get('/', checkRole(['driver', 'owner', 'superadmin']), AllStations);
+router.get('/', checkRole(['Driver', 'owner', 'superadmin']), AllStations);
 router.put(
   '/:id',
   checkRole(['owner', 'superadmin']),
@@ -51,7 +51,7 @@ router.delete(
 );
 router.get(
   '/search/geo',
-  checkRole(['driver', 'owner', 'superadmin']),
+  checkRole(['Driver', 'owner', 'superadmin']),
   validateQuery(geoSearchQuerySchema),
   geoSearchStations
 );

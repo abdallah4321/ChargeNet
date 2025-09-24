@@ -9,13 +9,13 @@ import {
 } from '../controllers/UsersControllers.js';
 import { protect, authorize } from '../middleware/auth.js';
 import {
+  idParamSchema,
   validateBody,
   validateParam,
   validateQuery,
 } from '../middleware/validateMiddleware.js';
 import {
   findEmailQuerySchema,
-  idParamSchema,
   registerSchema,
   updateUserSchema,
 } from '../validators/UserValidations.js';

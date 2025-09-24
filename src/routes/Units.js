@@ -11,10 +11,10 @@ import {
 } from '../controllers/UnitsController.js';
 import {
   createUnitsSchema,
-  idParamSchema,
   updateUnitsSchema,
 } from '../validators/UnitsValidations.js';
 import {
+  idParamSchema,
   validateBody,
   validateParam,
 } from '../middleware/validateMiddleware.js';
@@ -28,7 +28,7 @@ router.post(
 );
 router.get(
   '/:id',
-  checkRole(['driver', 'owner', 'superadmin']),
+  checkRole(['Driver', 'owner', 'superadmin']),
   validateParam(idParamSchema),
   getUnitsById
 );
