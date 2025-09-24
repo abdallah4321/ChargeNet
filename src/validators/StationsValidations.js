@@ -27,3 +27,34 @@ export const updateStationSchema = Joi.object({
   units: Joi.array().items(Joi.string()).optional(),
   status: Joi.string().valid('active', 'inactive').optional(),
 });
+
+export const idParamSchema = Joi.object({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)          
+    .required()
+    .messages({
+      "string.pattern.base": "Invalid ID format. Must be a MongoDB ObjectId",
+      "any.required": "ID is required",
+    }),
+});
+
+ 
+export const geoSearchQuerySchema = Joi.object({
+  lng: Joi.number().required().min(-180).max(180).messages({
+    "any.required": "Longitude (lng) is required",
+    "number.base": "Longitude must be a number",
+    "number.min": "Longitude cannot be less than -180",
+    "number.max": "Longitude cannot be more than 180",
+  }),
+  lat: Joi.number().required().min(-90).max(90).messages({
+    "any.required": "Latitude (lat) is required",
+    "number.base": "Latitude must be a number",
+    "number.min": "Latitude cannot be less than -90",
+    "number.max": "Latitude cannot be more than 90",
+  }),
+  radius: Joi.number().required().positive().messages({
+    "any.required": "Radius is required",
+    "number.base": "Radius must be a number",
+    "number.positive": "Radius must be a positive number",
+  }),
+});
