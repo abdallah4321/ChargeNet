@@ -7,7 +7,13 @@ export const registerSchema = Joi.object({
   phone: Joi.string().optional(),
   role: Joi.string().valid('Driver', 'Owner', 'SuperAdmin'),
 });
-
+export const updateUserSchema = Joi.object({
+  name: Joi.string().min(2).optional(),
+  email: Joi.string().email().optional(),
+  password: Joi.string().min(6).optional(),
+  phone: Joi.string().optional(),
+  role: Joi.string().valid('Driver', 'Owner', 'SuperAdmin').optional(),
+});
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),

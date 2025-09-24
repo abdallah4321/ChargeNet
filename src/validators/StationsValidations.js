@@ -10,21 +10,20 @@ export const createStationSchema = Joi.object({
   }).required(),
   capacity: Joi.number().required(),
   units: Joi.array().items(Joi.string()).optional(),
-  noUnits: Joi.number().min(0).default(0),
-  availableBikes: Joi.number().default(0),
+  unitsCount: Joi.number().min(0).default(0),
   status: Joi.string().valid('active', 'inactive').default('active'),
 });
 
 export const updateStationSchema = Joi.object({
-  name: Joi.string().min(2).optional(),
+  ownerId: Joi.string().optional(),
   stationImg: Joi.string().optional(),
+  name: Joi.string().min(2).optional(),
   location: Joi.object({
     type: Joi.string().valid('Point').default('Point'),
     coordinates: Joi.array().items(Joi.number()).length(2).optional(),
   }).optional(),
   capacity: Joi.number().optional(),
-  noUnits: Joi.number().min(0).optional(),
+  unitsCount: Joi.number().min(0).optional(),
   units: Joi.array().items(Joi.string()).optional(),
-  availableBikes: Joi.number().optional(),
   status: Joi.string().valid('active', 'inactive').optional(),
 });
