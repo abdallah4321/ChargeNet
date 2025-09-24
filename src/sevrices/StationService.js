@@ -8,14 +8,12 @@ import {
 } from '../dataAccess/satation.dataAccess.js';
 
 export const createStation = async (data) => {
-  if (data.noUnits && data.capacity) {
-    data.availableBikes = data.capacity - data.noUnits;
-  }
   return await createStations(data);
 };
 
 export const getStationById = async (id) => {
-  return await findStationById(id);
+  return await findStationById(id)
+  
 };
 
 export const getAllStations = async () => {
@@ -23,9 +21,6 @@ export const getAllStations = async () => {
 };
 
 export const UpdateStation = async (id, data) => {
-  if (data.noUnits && data.capacity) {
-    data.availableBikes = data.capacity - data.noUnits;
-  }
   return await updateStation(id, data);
 };
 

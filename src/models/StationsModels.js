@@ -14,9 +14,8 @@ const StationsSchema = new mongoose.Schema(
       coordinates: { type: [Number], required: true }, // [lng, lat]
     },
     capacity: { type: Number, required: true },
+    unitsCount: { type: Number, default: 0 },
     units: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Units' }],
-    noUnits: { type: Number, required: true },
-    availableBikes: { type: Number, default: 0 },
     status: { type: String, enum: ['active', 'inactive'], default: 'active' },
   },
   { timestamps: true }
