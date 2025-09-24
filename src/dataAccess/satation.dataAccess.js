@@ -6,18 +6,27 @@ export const createStations = async (dataStation) => {
 };
 
 export const findStationById = async (id) => {
-  return await Stations.findById(id)
-    .populate('ownerId', 'name email')
-    .populate('units', 'name unitType status pricePerHour'); 
+    return await Stations.findById(id)
+    .populate({
+      path: "units", 
+      select: "name unitType status pricePerHour lastMaintenance"
+    });
+
+};
+
+export const updateUnitsCount = async (stationId, change) => {
+  return await Stations.findByIdAndUpdate(
+    stationId,
+    { $inc: { unitsCount: change } },
+    { new: true }
+  );
 };
 
 export const updateStation = async (id, updateData) => {
   return await Stations.findByIdAndUpdate(id, updateData, {
     new: true,
     runValidators: true,
-  })
-    .populate('ownerId', 'name email')
-    .populate('Unit', 'type status');
+  });
 };
 
 export const deleteStation = async (id) => {
@@ -25,9 +34,7 @@ export const deleteStation = async (id) => {
 };
 
 export const getAllStation = async () => {
-  return await Stations.find({})
-    .populate('ownerId', 'name email')
-    .populate('Unit', 'type status');
+  return await Stations.find({});
 };
 
 export const geoSearchStations = async (lng, lat, radius) => {

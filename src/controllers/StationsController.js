@@ -6,18 +6,11 @@ import {
   DeleteStation,
   geoSearchService,
 } from '../sevrices/StationService.js';
-import {
-  createStationSchema,
-  updateStationSchema,
-} from '../validators/StationsValidations.js';
-
-export const createstation = async (req, res, next) => {
+import APIError from '../utils/apiError.js';
+export const addStation = async (req, res, next) => {
   try {
-    const { error, value } = createStationSchema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-
-    const station = await createStation(value);
-    res.status(201).json(station);
+    const station = await createStation(req.body);
+    res.status(201).json({ status: 'success', data: station });
   } catch (err) {
     next(err);
   }
@@ -25,8 +18,10 @@ export const createstation = async (req, res, next) => {
 
 export const StationById = async (req, res, next) => {
   try {
-    const station = await getStationById(req.params.id);
-    if (!station) return res.status(404).json({ error: 'Station not found' });
+    const station = await getStationById(req.params.id)
+    if (!station) {
+      throw new APIError('Station not found', 404);
+    }
     res.json(station);
   } catch (err) {
     next(err);
@@ -44,9 +39,7 @@ export const AllStations = async (req, res, next) => {
 
 export const updateStations = async (req, res, next) => {
   try {
-    const { error, value } = updateStationSchema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-
+    const { value } = req.body;
     const station = await UpdateStation(req.params.id, value);
     if (!station) return res.status(404).json({ error: 'Station not found' });
 

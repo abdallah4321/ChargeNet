@@ -2,22 +2,10 @@ import { createUser, findUserByEmail } from '../dataAccess/user.dataAccess.js';
 import APIError from '../utils/apiError.js';
 import { generateToken } from '../utils/jwt.js';
 import bcrypt from 'bcryptjs';
-import {
-  forgetPasswordSchema,
-  registerSchema,
-  loginSchema,
-  resetPasswordSchema,
-} from '../validators/UserValidations.js';
 import { sendResetToken, resetPassword } from '../sevrices/authService.js';
 
 export const register = async (req, res, next) => {
   try {
-    const { error } = registerSchema.validate(req.body);
-    console.log(error);
-
-    if (error) {
-      throw new APIError(error.details[0].message, 400);
-    }
     const existingEmail = await findUserByEmail(req.body.email);
     if (existingEmail) {
       throw new APIError('Email already exists', 400);
@@ -42,11 +30,6 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const { error } = loginSchema.validate(req.body);
-    if (error) {
-      throw new APIError('email or password not valid', 400);
-    }
-
     const { email, password } = req.body;
 
     const user = await findUserByEmail(email);
@@ -77,9 +60,6 @@ export const login = async (req, res, next) => {
 
 export const forgetPassword = async (req, res, next) => {
   try {
-    const { error } = forgetPasswordSchema.validate(req.body);
-    if (error) throw new APIError(error.details[0].message, 400);
-
     const { email } = req.body;
     await sendResetToken(email);
 
@@ -91,9 +71,6 @@ export const forgetPassword = async (req, res, next) => {
 
 export const ResetPassword = async (req, res, next) => {
   try {
-    const { error } = resetPasswordSchema.validate(req.body);
-    if (error) throw new APIError(error.details[0].message, 400);
-
     const { token, newPassword } = req.body;
     await resetPassword(token, newPassword);
 
