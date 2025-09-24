@@ -27,7 +27,7 @@ export const createUnit = async (req, res, next) => {
       lastMaintenance,
     });
     station.units.push(Unit._id);
-    station.unitsCount = station.units.length; // أو +1 لو تحب
+    station.unitsCount = station.units.length; 
     await station.save();
     await updateUnitsCount(stationId, 1);
 

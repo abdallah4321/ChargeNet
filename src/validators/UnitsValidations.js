@@ -31,3 +31,25 @@ export const updateUnitsSchema = Joi.object({
   pricePerHour: Joi.number().optional(),
   lastMaintenance: Joi.date().optional(),
 });
+
+export const idParamSchema = Joi.object({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)          
+    .required()
+    .messages({
+      "string.pattern.base": "Invalid ID format. Must be a MongoDB ObjectId",
+      "any.required": "ID is required",
+    }),
+});
+
+
+export const querySchema = Joi.object({
+  status: Joi.string().valid('available', 'in-use', 'maintenance').optional(),
+  unitType: Joi.string().optional(),
+  minPrice: Joi.number().min(0).optional(),
+  maxPrice: Joi.number().min(0).optional(),
+  sortBy: Joi.string().valid('pricePerHour', 'lastMaintenance').optional(),
+  sortOrder: Joi.string().valid('asc', 'desc').optional(),
+  page: Joi.number().min(1).default(1),
+  limit: Joi.number().min(1).max(100).default(10),
+});   
