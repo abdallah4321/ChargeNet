@@ -8,7 +8,7 @@ export const addVehicles = async (dataVehicles) => {
 
 export const findVehicleById = async (id) => {
     return await Vehicles.findById(id)
-    .populate('UserId', 'name email -_id');
+    .populate('UserId', 'name email').projection('-__v');
 };
 
 export const updateUnitsCount = async (VehicleId, change) => {

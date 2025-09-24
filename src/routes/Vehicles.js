@@ -3,34 +3,48 @@ import express from 'express';
 const router = express.Router();
 import { checkRole, protect } from '../middleware/auth.js';
 import {
+  idParamSchema,
   validateBody,
   validateParam,
 } from '../middleware/validateMiddleware.js';
-import { crerateVehicleSchema, idParamSchema, updateVehicleSchema } from '../validators/VehiclesValidations.js';
-import { createVehicle, deleteVehicle, getAllVehicle, getVehicleById, updateVehicle } from '../controllers/VehiclesControllers.js';
+import {
+  crerateVehicleByAdminSchema,
+  updateVehicleSchema,
+} from '../validators/VehiclesValidations.js';
+import {
+  createVehicleByadmins,
+  createVehicleByDriver,
+  deleteVehicle,
+  getAllVehicle,
+  getVehicleById,
+  updateVehicle,
+} from '../controllers/VehiclesControllers.js';
 router.use(protect);
 
 router.post(
-  '/',
-  checkRole(['driver','owner', 'superadmin']),
-  validateBody(crerateVehicleSchema),
-createVehicle
+  '/',protect,
+  checkRole(['owner', 'superadmin']),
+  validateBody(crerateVehicleByAdminSchema),
+  createVehicleByadmins
 );
+
+router.post('/driver/',protect, checkRole(['Driver']), createVehicleByDriver);
+ 
 router.get(
-  '/:id',
-  checkRole(['driver', 'owner', 'superadmin']),
+  '/:id',protect,
+  checkRole(['Driver', 'owner', 'superadmin']),
   validateParam(idParamSchema),
   getVehicleById
 );
-router.get('/', checkRole(['driver', 'owner', 'superadmin']), getAllVehicle);
+router.get('/',protect, checkRole(['Driver', 'owner', 'superadmin']), getAllVehicle);
 router.put(
-  '/:id',
+  '/:id',protect,
   checkRole(['owner', 'superadmin']),
   validateBody(updateVehicleSchema),
   updateVehicle
 );
 router.delete(
-  '/:id',
+  '/:id',protect,
   checkRole(['owner', 'superadmin']),
   validateParam(idParamSchema),
   deleteVehicle

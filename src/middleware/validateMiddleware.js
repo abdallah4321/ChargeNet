@@ -1,3 +1,5 @@
+import { isValidObjectId } from 'mongoose';
+import Joi from 'joi';
 export const validateBody = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
@@ -36,3 +38,20 @@ export const validateQuery = (schema) => {
     next();
   };
 };
+
+
+export const idParamSchema = Joi.object({
+  id: Joi.string()
+    .custom((value, helpers) => {
+      if (!isValidObjectId(value)) {
+        return helpers.error('any.custom', {
+          message: 'Invalid ID format. Must be a MongoDB ObjectId',
+        });
+      }
+      return value;
+    })
+    .required()
+    .messages({
+      'any.required': 'ID is required',
+    }),
+});
