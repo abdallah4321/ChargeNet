@@ -3,7 +3,11 @@ import mongoose from 'mongoose';
 
 const unitsSchema = new mongoose.Schema(
   {
-    StationsId: { type: mongoose.Schema.Types.ObjectId, ref: 'Stations' },
+    stationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Stations',
+      required: true,
+    },
     // vehiclesId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicles' },
     name: { type: String, required: true },
     unitType: { type: String, required: true },
