@@ -1,5 +1,4 @@
-import Vehicles from "../models/VehiclesModels.js";
-
+import Vehicles from '../models/VehiclesModels.js';
 
 export const addVehicles = async (dataVehicles) => {
   const Vehicle = new Vehicles(dataVehicles);
@@ -7,12 +6,16 @@ export const addVehicles = async (dataVehicles) => {
 };
 
 export const findVehicleById = async (id) => {
-    return await Vehicles.findById(id)
-    .populate('UserId', 'name email').projection('-__v');
+  return await Vehicles.findById(id)
+    .populate('UserId', 'name email')
+    .projection('-__v');
 };
 
 export const updateUnitsCount = async (VehicleId, change) => {
-  return await Vehicles.findByIdAndUpdate( VehicleId , change, { new: true, runValidators: true });
+  return await Vehicles.findByIdAndUpdate(VehicleId, change, {
+    new: true,
+    runValidators: true,
+  });
 };
 
 export const updateVehicles = async (id, updateData) => {
@@ -29,5 +32,3 @@ export const deleteVehicles = async (id) => {
 export const getAllVehicles = async () => {
   return await Vehicles.find({});
 };
-
- 

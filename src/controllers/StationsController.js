@@ -18,7 +18,7 @@ export const addStation = async (req, res, next) => {
 
 export const StationById = async (req, res, next) => {
   try {
-    const station = await getStationById(req.params.id)
+    const station = await getStationById(req.params.id);
     if (!station) {
       throw new APIError('Station not found', 404);
     }

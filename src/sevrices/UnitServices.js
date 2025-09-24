@@ -1,4 +1,10 @@
-import { createUnit, deleteUnit, findUnitById, getAllUnits, updateUnit } from "../dataAccess/unit.dataAccess.js";
+import {
+  createUnit,
+  deleteUnit,
+  findUnitById,
+  getAllUnits,
+  updateUnit,
+} from '../dataAccess/unit.dataAccess.js';
 
 export const createUnits = async (data) => {
   return await createUnit(data);
@@ -19,5 +25,3 @@ export const UpdateUnits = async (id, data) => {
 export const deleteUnits = async (id) => {
   return await deleteUnit(id);
 };
-
- 

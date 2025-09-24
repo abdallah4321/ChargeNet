@@ -22,29 +22,38 @@ import {
 router.use(protect);
 
 router.post(
-  '/',protect,
+  '/',
+  protect,
   checkRole(['owner', 'superadmin']),
   validateBody(crerateVehicleByAdminSchema),
   createVehicleByadmins
 );
 
-router.post('/driver/',protect, checkRole(['Driver']), createVehicleByDriver);
- 
+router.post('/driver/', protect, checkRole(['Driver']), createVehicleByDriver);
+
 router.get(
-  '/:id',protect,
+  '/:id',
+  protect,
   checkRole(['Driver', 'owner', 'superadmin']),
   validateParam(idParamSchema),
   getVehicleById
 );
-router.get('/',protect, checkRole(['Driver', 'owner', 'superadmin']), getAllVehicle);
+router.get(
+  '/',
+  protect,
+  checkRole(['Driver', 'owner', 'superadmin']),
+  getAllVehicle
+);
 router.put(
-  '/:id',protect,
+  '/:id',
+  protect,
   checkRole(['owner', 'superadmin']),
   validateBody(updateVehicleSchema),
   updateVehicle
 );
 router.delete(
-  '/:id',protect,
+  '/:id',
+  protect,
   checkRole(['owner', 'superadmin']),
   validateParam(idParamSchema),
   deleteVehicle

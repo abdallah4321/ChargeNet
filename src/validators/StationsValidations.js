@@ -1,6 +1,5 @@
 import Joi from 'joi';
 
-
 export const createStationSchema = Joi.object({
   ownerId: Joi.string().required(),
   name: Joi.string().min(2).required(),
@@ -28,7 +27,6 @@ export const updateStationSchema = Joi.object({
   units: Joi.array().items(Joi.string()).optional(),
   status: Joi.string().valid('active', 'inactive').optional(),
 });
-
 
 export const geoSearchQuerySchema = Joi.object({
   lng: Joi.number().required().min(-180).max(180).messages({

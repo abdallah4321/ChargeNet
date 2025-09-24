@@ -39,7 +39,6 @@ export const validateQuery = (schema) => {
   };
 };
 
-
 export const idParamSchema = Joi.object({
   id: Joi.string()
     .custom((value, helpers) => {

@@ -13,9 +13,7 @@ app.use(compression());
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.get('/', (req, res) =>
-  res.json({ status: 'ok', service: 'ChargeNet' })
-);
+app.get('/', (req, res) => res.json({ status: 'ok', service: 'ChargeNet' }));
 app.use('/api/v1/', routes);
 app.use(notfound);
 app.use(errorhandler);

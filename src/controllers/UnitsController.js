@@ -11,7 +11,8 @@ import APIError from '../utils/apiError.js';
 
 export const createUnit = async (req, res, next) => {
   try {
-    const { name, stationId, unitType, pricePerHour, status, lastMaintenance } = req.body;
+    const { name, stationId, unitType, pricePerHour, status, lastMaintenance } =
+      req.body;
 
     const station = await getStationById(stationId);
     if (!station) {
@@ -20,14 +21,14 @@ export const createUnit = async (req, res, next) => {
 
     const Unit = await createUnits({
       name,
-      stationId,    
+      stationId,
       unitType,
       pricePerHour,
       status,
       lastMaintenance,
     });
     station.units.push(Unit._id);
-    station.unitsCount = station.units.length; 
+    station.unitsCount = station.units.length;
     await station.save();
     await updateUnitsCount(stationId, 1);
 

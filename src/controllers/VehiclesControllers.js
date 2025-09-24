@@ -10,7 +10,7 @@ import APIError from '../utils/apiError.js';
 
 export const createVehicleByadmins = async (req, res, next) => {
   try {
-    const { name, type, powerKW, status ,User } = req.body;
+    const { name, type, powerKW, status, User } = req.body;
     const id = req.user.id;
     const Users = await getUserById(id);
     if (!Users) {

@@ -28,10 +28,9 @@ export const resetPasswordSchema = Joi.object({
   newPassword: Joi.string().min(6).required(),
 });
 
-
 export const findEmailQuerySchema = Joi.object({
   email: Joi.string().email().required().messages({
-    "string.empty": "Email is required",
-    "string.email": "Invalid email format",
+    'string.empty': 'Email is required',
+    'string.email': 'Invalid email format',
   }),
 });

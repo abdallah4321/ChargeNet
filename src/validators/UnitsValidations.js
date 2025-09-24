@@ -32,7 +32,6 @@ export const updateUnitsSchema = Joi.object({
   lastMaintenance: Joi.date().optional(),
 });
 
-
 export const querySchema = Joi.object({
   status: Joi.string().valid('available', 'in-use', 'maintenance').optional(),
   unitType: Joi.string().optional(),
@@ -42,4 +41,4 @@ export const querySchema = Joi.object({
   sortOrder: Joi.string().valid('asc', 'desc').optional(),
   page: Joi.number().min(1).default(1),
   limit: Joi.number().min(1).max(100).default(10),
-});   
+});

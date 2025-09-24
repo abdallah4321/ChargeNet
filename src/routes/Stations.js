@@ -10,7 +10,7 @@ import {
 import { checkRole, protect } from '../middleware/auth.js';
 import {
   validateBody,
-    idParamSchema,
+  idParamSchema,
   validateParam,
   validateQuery,
 } from '../middleware/validateMiddleware.js';

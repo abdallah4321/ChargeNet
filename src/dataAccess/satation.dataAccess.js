@@ -6,12 +6,10 @@ export const createStations = async (dataStation) => {
 };
 
 export const findStationById = async (id) => {
-    return await Stations.findById(id)
-    .populate({
-      path: "units", 
-      select: "name unitType status pricePerHour lastMaintenance"
-    });
-
+  return await Stations.findById(id).populate({
+    path: 'units',
+    select: 'name unitType status pricePerHour lastMaintenance',
+  });
 };
 
 export const updateUnitsCount = async (stationId, change) => {
