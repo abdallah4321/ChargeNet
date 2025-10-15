@@ -1,25 +1,26 @@
 import mongoose from 'mongoose';
 
-const BookingModels = new mongoose.Schema(
+const bookingSchema = new mongoose.Schema(
   {
-    UserId: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
-    StationsId: { type: mongoose.Schema.Types.ObjectId, ref: 'Stations' },
-    UnitsId: { type: mongoose.Schema.Types.ObjectId, ref: 'Units' },
-    status: {
-      type: String,
-      enum: ['pending', 'confirmed', 'completed', 'canceled'],
-      default: 'pending',
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
+    vehicle: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicles' },
+    unit: { type: mongoose.Schema.Types.ObjectId, ref: 'Units' },
+    payment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Payments',
+      default: null,
     },
+    amount : { type: Number, required: true },  
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
-    actualStartTime: { type: Date },
-    actualEndTime: { type: Date },
-    energyConsumed: { type: Number, default: 0 }, // in kWh
-    totalPrice: { type: Number, required: true },
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+      default: 'pending',
+    },
   },
   { timestamps: true }
 );
 
-const Booking = mongoose.model('Booking', BookingModels);
-
+const Booking = mongoose.model('Bookings', bookingSchema);
 export default Booking;
