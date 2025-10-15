@@ -82,10 +82,8 @@ export const getAllVehicle = async (req, res, next) => {
 
 export const updateVehicle = async (req, res, next) => {
   try {
-    const { value } = req.body;
-    if (value) return res.status(400).json({ error: error.details[0].message });
 
-    const Vehicle = await updateVehicles(req.params.id, value);
+    const Vehicle = await updateVehicles(req.params.id, req.body);
     if (!Vehicle)
       return res.status(404).json({ error: 'The Vehicle not found' });
 
