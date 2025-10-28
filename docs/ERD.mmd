@@ -1,89 +1,87 @@
-%% ChargeNet ERD (Mermaid)
-%% Save as docs/ERD.mmd
+  ChargeNet ERD  
+  docs/ERD.mmd
 
 erDiagram
-  USERS {
-    ObjectId _id PK
-    string name
-    string email
-    string password
-    string role
-    string phone
-    string UserImg
-  }
+    USERS {
+        ObjectId _id PK
+        string name
+        string email
+        string password
+        string role
+        string phone
+        string UserImg
+    }
 
-  STATIONS {
-    ObjectId _id PK
-    string name
-    string address
-    string status
-    string ownerId FK
-  }
+    STATIONS {
+        ObjectId _id PK
+        string name
+        string address
+        string status
+        ObjectId ownerId FK
+    }
 
-  UNITS {
-    ObjectId _id PK
-    string unitNumber
-    string status
-    ObjectId stationId FK
-    number power_kw
-  }
+    UNITS {
+        ObjectId _id PK
+        string unitNumber
+        string status
+        ObjectId stationId FK
+        number power_kw
+    }
 
-  VEHICLES {
-    ObjectId _id PK
-    string plateNumber
-    string model
-    ObjectId ownerId FK
-  }
+    VEHICLES {
+        ObjectId _id PK
+        string plateNumber
+        string model
+        ObjectId ownerId FK
+    }
 
-  BOOKINGS {
-    ObjectId _id PK
-    ObjectId userId FK
-    ObjectId unitId FK
-    ObjectId vehicleId FK
-    datetime startAt
-    datetime endAt
-    string status
-  }
+    BOOKINGS {
+        ObjectId _id PK
+        ObjectId userId FK
+        ObjectId unitId FK
+        ObjectId vehicleId FK
+        datetime startAt
+        datetime endAt
+        string status
+    }
 
-  PAYMENTS {
-    ObjectId _id PK
-    ObjectId bookingId FK
-    ObjectId userId FK
-    number amount
-    string currency
-    string status
-    datetime paidAt
-  }
+    PAYMENTS {
+        ObjectId _id PK
+        ObjectId bookingId FK
+        ObjectId userId FK
+        number amount
+        string currency
+        string status
+        datetime paidAt
+    }
 
-  NOTIFICATIONS {
-    ObjectId _id PK
-    ObjectId userId FK
-    string message
-    boolean read
-    datetime sentAt
-  }
+    NOTIFICATIONS {
+        ObjectId _id PK
+        ObjectId userId FK
+        string message
+        boolean read
+        datetime sentAt
+    }
 
-  REPORTS {
-    ObjectId _id PK
-    string type
-    ObjectId stationId FK
-    datetime periodStart
-    datetime periodEnd
-    json payload
-  }
+    REPORTS {
+        ObjectId _id PK
+        string type
+        ObjectId stationId FK
+        datetime periodStart
+        datetime periodEnd
+        json payload
+    }
 
-  %% Relationships
-  USERS ||--o{ BOOKINGS : "makes"
-  USERS ||--o{ VEHICLES : "owns"
-  USERS ||--o{ PAYMENTS : "pays"
-  USERS ||--o{ NOTIFICATIONS : "receives"
+    USERS ||--o{ BOOKINGS : "makes"
+    USERS ||--o{ VEHICLES : "owns"
+    USERS ||--o{ PAYMENTS : "pays"
+    USERS ||--o{ NOTIFICATIONS : "receives"
 
-  STATIONS ||--o{ UNITS : "has"
-  UNITS ||--o{ BOOKINGS : "booked_in"
-  BOOKINGS ||--o{ PAYMENTS : "billed_by"
-  STATIONS ||--o{ REPORTS : "reported_in"
-  BOOKINGS }|..|{ VEHICLES : "for"
+    STATIONS ||--o{ UNITS : "has"
+    STATIONS ||--o{ REPORTS : "reported_in"
+    STATIONS }|--|| USERS : "owned_by"
 
-  %% Notes
-  %% This ERD is a conceptual model derived from the project's models directory.
-  %% Use the Mermaid Live Editor or CLI to render/export as PNG/SVG if needed.
+    UNITS ||--o{ BOOKINGS : "booked_in"
+
+    BOOKINGS ||--o{ PAYMENTS : "billed_by"
+    BOOKINGS }o--|| VEHICLES : "for"

@@ -221,8 +221,7 @@ erDiagram
    BOOKINGS }|..|{ VEHICLES : "for"
 ```
 
-You can export the diagram to PNG/SVG using the Mermaid CLI (mmdc) or view it in the Mermaid Live Editor:
-
+ 
 ```bash
 # Install mermaid-cli (optional)
 npm i -g @mermaid-js/mermaid-cli
@@ -230,6 +229,10 @@ npm i -g @mermaid-js/mermaid-cli
 # Export PNG
 mmdc -i docs/ERD.mmd -o docs/ERD.png
 ```
+
+### Rendered ERD  
+
+![ChargeNet ERD](docs/ERD.png)
 
 ## Prerequisites 📋
 
