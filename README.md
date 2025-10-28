@@ -50,6 +50,190 @@ ChargeNet is a comprehensive Electric Vehicle (EV) charging station management s
   - Nodemon for development auto-reload
   - Postman for API testing and documentation
 
+## Project Structure 📁
+
+```
+src/
+├── app.js                  # Express app configuration
+├── server.js              # Server entry point
+├── config/               # Configuration files
+│   ├── agendaConfig.js   # Job scheduler config
+│   ├── db.js            # Database connection
+│   └── logger.js        # Logging configuration
+├── controllers/         # Request handlers
+│   ├── authControllers.js
+│   ├── BookingController.js
+│   ├── PaymentControllers.js
+│   ├── ReportsController.js
+│   ├── StationsController.js
+│   ├── UnitsController.js
+│   ├── UsersControllers.js
+│   └── VehiclesControllers.js
+├── dataAccess/         # Data access layer
+│   ├── Booking.dataAccess.js
+│   ├── payment.dataAcess.js
+│   ├── Reports.dataAccess.js
+│   ├── satation.dataAccess.js
+│   ├── unit.dataAccess.js
+│   ├── user.dataAccess.js
+│   └── Vehicle.dataAccess.js
+├── jobs/              # Scheduled jobs
+│   ├── autoScheduler.js
+│   ├── bookingAuto.js
+│   ├── chargeReminder.js
+│   ├── dailyReport.job.js
+│   ├── monthlyReport.job.js
+│   └── various automation jobs
+├── middleware/        # Express middleware
+│   ├── auth.js       # Authentication middleware
+│   ├── error.js      # Error handling
+│   └── validateMiddleware.js
+├── models/           # Mongoose models
+│   ├── BookingModels.js
+│   ├── NotificationsModels.js
+│   ├── PaymentModels.js
+│   ├── StationsModels.js
+│   ├── UnitsModels.js
+│   ├── UsersModels.js
+│   └── VehiclesModels.js
+├── routes/           # API routes
+│   ├── auth.js
+│   ├── Booking.js
+│   ├── index.js
+│   ├── Payment.js
+│   ├── Reports.js
+│   ├── Stations.js
+│   ├── Units.js
+│   ├── Users.js
+│   └── Vehicles.js
+├── services/         # Business logic
+│   ├── authService.js
+│   ├── BookingServices.js
+│   ├── paymentService.js
+│   ├── ReportsServices.js
+│   ├── StationService.js
+│   ├── UnitServices.js
+│   ├── UserServices.js
+│   └── VehicleService.js
+├── utils/           # Utility functions
+│   ├── Agenda.js
+│   ├── apiError.js
+│   ├── jwt.js
+│   ├── paymob.js
+│   └── sendEmail.js
+└── validators/      # Request validators
+    ├── BookingValiations.js
+    ├── PaymentValidations.js
+    ├── StationsValidations.js
+    ├── UnitsValidations.js
+    ├── UserValidations.js
+    └── VehiclesValidations.js
+
+```
+
+## ERD (Entity-Relationship Diagram)
+
+A conceptual ERD for the ChargeNet project is included in `docs/ERD.mmd` (Mermaid format). You can view and edit the source there or render it with the Mermaid Live Editor.
+
+Quick inline Mermaid source (also available in `docs/ERD.mmd`):
+
+```mermaid
+erDiagram
+   USERS {
+      ObjectId _id PK
+      string name
+      string email
+      string password
+      string role
+      string phone
+      string UserImg
+   }
+
+   STATIONS {
+      ObjectId _id PK
+      string name
+      string address
+      string status
+      string ownerId FK
+   }
+
+   UNITS {
+      ObjectId _id PK
+      string unitNumber
+      string status
+      ObjectId stationId FK
+      number power_kw
+   }
+
+   VEHICLES {
+      ObjectId _id PK
+      string plateNumber
+      string model
+      ObjectId ownerId FK
+   }
+
+   BOOKINGS {
+      ObjectId _id PK
+      ObjectId userId FK
+      ObjectId unitId FK
+      ObjectId vehicleId FK
+      datetime startAt
+      datetime endAt
+      string status
+   }
+
+   PAYMENTS {
+      ObjectId _id PK
+      ObjectId bookingId FK
+      ObjectId userId FK
+      number amount
+      string currency
+      string status
+      datetime paidAt
+   }
+
+   NOTIFICATIONS {
+      ObjectId _id PK
+      ObjectId userId FK
+      string message
+      boolean read
+      datetime sentAt
+   }
+
+   REPORTS {
+      ObjectId _id PK
+      string type
+      ObjectId stationId FK
+      datetime periodStart
+      datetime periodEnd
+      json payload
+   }
+
+   USERS ||--o{ BOOKINGS : "makes"
+   USERS ||--o{ VEHICLES : "owns"
+   USERS ||--o{ PAYMENTS : "pays"
+   USERS ||--o{ NOTIFICATIONS : "receives"
+
+   STATIONS ||--o{ UNITS : "has"
+   UNITS ||--o{ BOOKINGS : "booked_in"
+   BOOKINGS ||--o{ PAYMENTS : "billed_by"
+   STATIONS ||--o{ REPORTS : "reported_in"
+   BOOKINGS }|..|{ VEHICLES : "for"
+```
+
+ 
+```bash
+# Install mermaid-cli (optional)
+npm i -g @mermaid-js/mermaid-cli
+
+# Export PNG
+mmdc -i docs/ERD.mmd -o docs/ERD.png
+```
+
+### Rendered ERD  
+
+![ChargeNet ERD](docs/ERD.png)
+
 ## Prerequisites 📋
 
 - Node.js (v14 or higher)
@@ -119,7 +303,88 @@ The API is organized around REST principles. It accepts JSON-encoded request bod
 http://localhost:3000/api/v1
 ```
 
-For detailed API documentation, please refer to our API documentation (coming soon).
+### Available Endpoints
+
+#### Authentication
+
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login user
+- `GET /auth/me` - Get current user profile
+
+#### Users
+
+- `GET /users` - Get all users
+- `GET /users/:id` - Get user by ID
+- `PUT /users/:id` - Update user
+- `DELETE /users/:id` - Delete user
+- `PUT /users/ban/:id` - Ban/unban user
+
+#### Stations
+
+- `POST /stations` - Create new station
+- `GET /stations` - Get all stations
+- `GET /stations/:id` - Get station by ID
+- `PUT /stations/:id` - Update station
+- `DELETE /stations/:id` - Delete station
+
+#### Units
+
+- `POST /units` - Create new charging unit
+- `GET /units` - Get all units
+- `GET /units/:id` - Get unit by ID
+- `PUT /units/:id` - Update unit
+- `DELETE /units/:id` - Delete unit
+
+#### Bookings
+
+- `POST /bookings` - Create new booking
+- `GET /bookings` - Get all bookings
+- `GET /bookings/:id` - Get booking by ID
+- `PUT /bookings/:id` - Update booking
+- `DELETE /bookings/:id` - Cancel booking
+
+#### Vehicles
+
+- `POST /vehicles` - Add new vehicle
+- `GET /vehicles` - Get all vehicles
+- `GET /vehicles/:id` - Get vehicle by ID
+- `PUT /vehicles/:id` - Update vehicle
+- `DELETE /vehicles/:id` - Delete vehicle
+
+#### Payments
+
+- `POST /payments/create` - Create payment intent
+- `POST /payments/process` - Process payment
+- `GET /payments/history` - Get payment history
+
+#### Reports
+
+- `GET /reports/daily` - Get daily reports
+- `GET /reports/monthly` - Get monthly reports
+- `GET /reports/custom` - Get custom date range reports
+
+### Postman Collection
+
+You can find the complete Postman collection with all endpoints, request/response examples, and environment variables in the file: `ChargeNet.postman_collection.json`.
+
+To use the collection:
+
+1. Import the collection into Postman:
+
+   ```bash
+   # Collection Location
+   c:\Users\hp\Downloads\ChargeNet.postman_collection.json
+   ```
+
+2. Set up environment variables:
+   - `BASE_URL`: Your API base URL (default: http://localhost:3000/api/v1)
+   - `TOKEN`: Your authentication token (automatically set after login)
+
+3. Use the organized folders to find and test endpoints:
+   - Each request includes necessary headers
+   - Request body examples are provided
+   - Response examples and status codes are documented
+   - Pre-request scripts handle auth token management
 
 ## Contributing
 

@@ -1,0 +1,87 @@
+  ChargeNet ERD  
+  docs/ERD.mmd
+
+erDiagram
+    USERS {
+        ObjectId _id PK
+        string name
+        string email
+        string password
+        string role
+        string phone
+        string UserImg
+    }
+
+    STATIONS {
+        ObjectId _id PK
+        string name
+        string address
+        string status
+        ObjectId ownerId FK
+    }
+
+    UNITS {
+        ObjectId _id PK
+        string unitNumber
+        string status
+        ObjectId stationId FK
+        number power_kw
+    }
+
+    VEHICLES {
+        ObjectId _id PK
+        string plateNumber
+        string model
+        ObjectId ownerId FK
+    }
+
+    BOOKINGS {
+        ObjectId _id PK
+        ObjectId userId FK
+        ObjectId unitId FK
+        ObjectId vehicleId FK
+        datetime startAt
+        datetime endAt
+        string status
+    }
+
+    PAYMENTS {
+        ObjectId _id PK
+        ObjectId bookingId FK
+        ObjectId userId FK
+        number amount
+        string currency
+        string status
+        datetime paidAt
+    }
+
+    NOTIFICATIONS {
+        ObjectId _id PK
+        ObjectId userId FK
+        string message
+        boolean read
+        datetime sentAt
+    }
+
+    REPORTS {
+        ObjectId _id PK
+        string type
+        ObjectId stationId FK
+        datetime periodStart
+        datetime periodEnd
+        json payload
+    }
+
+    USERS ||--o{ BOOKINGS : "makes"
+    USERS ||--o{ VEHICLES : "owns"
+    USERS ||--o{ PAYMENTS : "pays"
+    USERS ||--o{ NOTIFICATIONS : "receives"
+
+    STATIONS ||--o{ UNITS : "has"
+    STATIONS ||--o{ REPORTS : "reported_in"
+    STATIONS }|--|| USERS : "owned_by"
+
+    UNITS ||--o{ BOOKINGS : "booked_in"
+
+    BOOKINGS ||--o{ PAYMENTS : "billed_by"
+    BOOKINGS }o--|| VEHICLES : "for"
