@@ -1,42 +1,96 @@
 import Payment from '../models/PaymentModels.js';
-import { confirmBookingAfterPayment } from '../sevrices/BookingServices.js';
 import APIError from "../utils/apiError.js";
-  
+
 export const createPayment = async (data) => {
-  return await Payment.create(data);
-};
-
-
-
-export const handleCallback = async (orderId, success, paymentId) => {
-  const payment = await Payment.findOne({ orderId });
-  if (!payment) throw new APIError("Payment not found");
-
-  payment.status = success === "true" ? "completed" : "failed";
-  await payment.save();
-
-  if (payment.status === "completed") {
-    await confirmBookingAfterPayment(payment.BookingId, payment._id);
+  try {
+    return await Payment.create(data);
+  } catch (error) {
+    throw new APIError(`Error creating payment: ${error.message}`, 500);
   }
-
-  return payment;
 };
 
+export const findPaymentByOrderId = async (orderId) => {
+  try {
+    const payment = await Payment.findOne({ paymobOrderId: orderId })
+      .populate('userId', 'name email')
+      .populate('bookingId');
+    
+    if (!payment) {
+      throw new APIError("Payment not found", 404);
+    }
+    return payment;
+  } catch (error) {
+    if (error instanceof APIError) throw error;
+    throw new APIError(`Error finding payment: ${error.message}`, 500);
+  }
+};
 
 export const findPaymentById = async (id) => {
-  return await Payment.findById(id).populate('userId', 'name email');
+  try {
+    const payment = await Payment.findById(id)
+      .populate('userId', 'name email')
+      .populate('bookingId');
+    
+    if (!payment) {
+      throw new APIError("Payment not found", 404);
+    }
+    return payment;
+  } catch (error) {
+    if (error instanceof APIError) throw error;
+    throw new APIError(`Error finding payment: ${error.message}`, 500);
+  }
 };
 
-export const getAllPayments = async () => {
-  return await Payment.find().populate('userId', 'name email');
+export const getAllPayments = async (filters = {}) => {
+  try {
+    const { status, userId, page = 1, limit = 10 } = filters;
+    
+    const query = {};
+    if (status) query.status = status;
+    if (userId) query.userId = userId;
+
+    const skip = (page - 1) * limit;
+
+    const payments = await Payment.find(query)
+      .populate('userId', 'name email')
+      .populate('bookingId')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Payment.countDocuments(query);
+
+    return {
+      payments,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    };
+  } catch (error) {
+    throw new APIError(`Error fetching payments: ${error.message}`, 500);
+  }
 };
 
-
-
- 
 export const updatePaymentByOrderId = async (orderId, data) => {
-  return await Payment.findOneAndUpdate({ orderId }, data, {
-    new: true,
-  });
+  try {
+    const payment = await Payment.findOneAndUpdate(
+      { paymobOrderId: orderId }, 
+      data, 
+      { 
+        new: true,
+        runValidators: true 
+      }
+    ).populate('userId', 'name email').populate('bookingId');
+
+    if (!payment) {
+      throw new APIError("Payment not found", 404);
+    }
+    return payment;
+  } catch (error) {
+    if (error instanceof APIError) throw error;
+    throw new APIError(`Error updating payment: ${error.message}`, 500);
+  }
 };
- 

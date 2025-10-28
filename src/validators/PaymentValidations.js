@@ -1,9 +1,12 @@
 import Joi from 'joi';
 
 export const PaymentInitiateValidation = Joi.object({
-  orderId: Joi.string().required(),
-  paymentMethod: Joi.string().valid('Paymob').required(),
-  currency: Joi.string().valid('EGP').required(),
+  bookingId: Joi.string().required().messages({
+    'any.required': 'Booking ID is required',
+    'string.empty': 'Booking ID cannot be empty'
+  }),
+  paymentMethod: Joi.string().valid('Paymob').default('Paymob'),
+  currency: Joi.string().valid('EGP').default('EGP'),
   billingData: Joi.object({
     apartment: Joi.string().required(),
     email: Joi.string().email().required(),

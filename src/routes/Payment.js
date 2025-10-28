@@ -7,21 +7,41 @@ import {
   getAllPayment,
   getPaymentByID,
   paymentCallback,
+  getUserPayments,
 } from '../controllers/PaymentControllers.js';
 
 import { PaymentInitiateValidation } from '../validators/PaymentValidations.js';
 import { validateBody } from '../middleware/validateMiddleware.js';
 
+// 🔥 PUBLIC CALLBACK ROUTES - MUST BE FIRST
+router.get('/callback', paymentCallback);  // GET for Paymob callbacks
+router.post('/callback', paymentCallback); // POST for testing
+
+// 🔒 PROTECTED ROUTES
+router.use(protect);
+
+// User routes
 router.post(
-  '/pay',
-  protect,
-  checkRole(['Driver', 'owner' , 'superadmin']),
+  '/create-link',
   validateBody(PaymentInitiateValidation),
   createPayment
 );
 
-router.post('/getPayment/:id', protect, checkRole(['owner', 'superadmin']), getPaymentByID);
-router.get('/', protect, checkRole(['owner', 'superadmin']), getAllPayment);
-router.get('/callback', paymentCallback);
+router.get(
+  '/my-payments',
+  getUserPayments
+);
+
+router.get(
+  '/:id',
+  getPaymentByID
+);
+
+// Admin only routes
+router.get(
+  '/',
+  checkRole(['owner', 'superadmin']),
+  getAllPayment
+);
 
 export default router;
