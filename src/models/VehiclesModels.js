@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const VehiclesModels = new mongoose.Schema(
   {
-    UserId: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
+    User: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
     name: { type: String, required: true },
     type: { type: String, required: true },
     powerKW: { type: Number, required: true },

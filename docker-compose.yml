@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
- 
+
   mongo:
     image: mongo:6
     container_name: ev_mongo

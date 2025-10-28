@@ -12,8 +12,7 @@ export const createStation = async (data) => {
 };
 
 export const getStationById = async (id) => {
-  return await findStationById(id)
-  
+  return await findStationById(id);
 };
 
 export const getAllStations = async () => {
