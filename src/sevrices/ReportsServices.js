@@ -13,6 +13,7 @@ import {
   getUserActivityReport,
   getWeeklyBookingReport,
 } from '../dataAccess/Reports.dataAccess.js';
+import sendEmail from '../utils/sendEmail.js';
 
 export const generateDailyReport = async (date) => {
   return await getDailyBookingStats(date);
@@ -93,4 +94,40 @@ export const generateTopStationsReportByRevenue = async (
   return await getTopStationsReportByRevenue(startDate, endDate);
 };
 
- 
+
+
+ export const sendDailyReport = async (date = new Date()) => {
+  const reportData = await getDailyBookingStats(date);
+  await sendDailyReportEmail(reportData, date);
+  return reportData;
+};
+
+const sendDailyReportEmail = async (reportData, date) => {
+  const formattedDate = date.toISOString().split('T')[0];
+
+  const htmlRows = reportData.map(
+    (r) => `<tr><td>${r.status}</td><td>${r.count}</td></tr>`
+  ).join('');
+
+  const html = `
+    <h2>📅 Daily Booking Report - ${formattedDate}</h2>
+    <p>Here is the booking summary for ${formattedDate}:</p>
+    <table border="1" cellspacing="0" cellpadding="8" style="border-collapse: collapse;">
+      <thead>
+        <tr><th>Status</th><th>Count</th></tr>
+      </thead>
+      <tbody>${htmlRows}</tbody>
+    </table>
+    <br/>
+    <p>Regards,<br/>ARS Valley System</p>
+  `;
+
+  await sendEmail({
+    to: 'makkalanagesh143@gmail.com',
+    subject: `Daily Report - ${formattedDate}`,
+    text: `Daily Booking Report for ${formattedDate}`,
+    html,
+  });
+
+  console.log('✅ Daily report email sent successfully');
+};

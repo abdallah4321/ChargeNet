@@ -16,6 +16,8 @@ export const getDailyBookingStats = async (date) => {
   const results = await Booking.aggregate([
     { $match: { createdAt: { $gte: start, $lte: end } } },
     { $group: { _id: '$status', count: { $sum: 1 } } },
+    { $project: { _id:0 , status: '$_id', count: 1 } },
+
   ]);
 
   return results;
