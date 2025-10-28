@@ -131,6 +131,106 @@ src/
 
 ```
 
+## ERD (Entity-Relationship Diagram)
+
+A conceptual ERD for the ChargeNet project is included in `docs/ERD.mmd` (Mermaid format). You can view and edit the source there or render it with the Mermaid Live Editor.
+
+Quick inline Mermaid source (also available in `docs/ERD.mmd`):
+
+```mermaid
+erDiagram
+   USERS {
+      ObjectId _id PK
+      string name
+      string email
+      string password
+      string role
+      string phone
+      string UserImg
+   }
+
+   STATIONS {
+      ObjectId _id PK
+      string name
+      string address
+      string status
+      string ownerId FK
+   }
+
+   UNITS {
+      ObjectId _id PK
+      string unitNumber
+      string status
+      ObjectId stationId FK
+      number power_kw
+   }
+
+   VEHICLES {
+      ObjectId _id PK
+      string plateNumber
+      string model
+      ObjectId ownerId FK
+   }
+
+   BOOKINGS {
+      ObjectId _id PK
+      ObjectId userId FK
+      ObjectId unitId FK
+      ObjectId vehicleId FK
+      datetime startAt
+      datetime endAt
+      string status
+   }
+
+   PAYMENTS {
+      ObjectId _id PK
+      ObjectId bookingId FK
+      ObjectId userId FK
+      number amount
+      string currency
+      string status
+      datetime paidAt
+   }
+
+   NOTIFICATIONS {
+      ObjectId _id PK
+      ObjectId userId FK
+      string message
+      boolean read
+      datetime sentAt
+   }
+
+   REPORTS {
+      ObjectId _id PK
+      string type
+      ObjectId stationId FK
+      datetime periodStart
+      datetime periodEnd
+      json payload
+   }
+
+   USERS ||--o{ BOOKINGS : "makes"
+   USERS ||--o{ VEHICLES : "owns"
+   USERS ||--o{ PAYMENTS : "pays"
+   USERS ||--o{ NOTIFICATIONS : "receives"
+
+   STATIONS ||--o{ UNITS : "has"
+   UNITS ||--o{ BOOKINGS : "booked_in"
+   BOOKINGS ||--o{ PAYMENTS : "billed_by"
+   STATIONS ||--o{ REPORTS : "reported_in"
+   BOOKINGS }|..|{ VEHICLES : "for"
+```
+
+You can export the diagram to PNG/SVG using the Mermaid CLI (mmdc) or view it in the Mermaid Live Editor:
+
+```bash
+# Install mermaid-cli (optional)
+npm i -g @mermaid-js/mermaid-cli
+
+# Export PNG
+mmdc -i docs/ERD.mmd -o docs/ERD.png
+```
+
 ## Prerequisites 📋
 
 - Node.js (v14 or higher)
